@@ -31,7 +31,7 @@ local ngTaints(x) =
     {
       effect: 'NoExecute',
       key: 'dedicated.deckhouse.io',
-      value: 'system',
+      value: 'frontend',
     },
   ]
   else [];
@@ -136,8 +136,8 @@ local ngNames(vms) = [
       ['\n# wait for vms to be deployed'] +
       [
         std.format(
-          'sudo kubectl wait  %s --timeout=5m --for=jsonpath={.status.phase}=Running ',
-          [std.join(' ', ['vm/' + x.metadata.name for x in vms.items])]
+          'sudo kubectl wait -n %s %s --timeout=5m --for=jsonpath={.status.phase}=Running ',
+          [vms.items[0].metadata.namespace, std.join(' ', ['vm/' + x.metadata.name for x in vms.items])]
         ),
       ]
       +
